@@ -8,26 +8,26 @@ updates = [
 ]
 
 
-def is_valid_update_direct(update, rules):
-    position = {page: idx for idx, page in enumerate(update)}
+def is_valid(update, rules):
+    pos = {page: idx for idx, page in enumerate(update)}
     for rule in rules:
         x, y = map(int, rule.split("|"))
-        if x in position and y in position and position[x] > position[y]:
+        if x in pos and y in pos and pos[x] > pos[y]:
             return False
     return True
 
 
-def find_middle_page(update):
+def find_mid(update):
     n = len(update)
     return update[n // 2]
 
 
-def correct_update_order(update, rules):
-    position = {page: idx for idx, page in enumerate(update)}
+def correct(update, rules):
+    pos = {page: idx for idx, page in enumerate(update)}
     relevant_rules = [
         (int(x), int(y))
         for x, y in (rule.split("|") for rule in rules)
-        if int(x) in position and int(y) in position
+        if int(x) in pos and int(y) in pos
     ]
     graph = defaultdict(list)
     in_degree = defaultdict(int)
@@ -53,10 +53,10 @@ def correct_update_order(update, rules):
 
 valid_updates = []
 for update in updates:
-    if is_valid_update_direct(update, ordering_rules):
+    if is_valid(update, ordering_rules):
         valid_updates.append(update)
 
-middle_pages_direct = [find_middle_page(update) for update in valid_updates]
+middle_pages_direct = [find_mid(update) for update in valid_updates]
 
 result = sum(middle_pages_direct)
 
@@ -66,11 +66,11 @@ incorrect_updates = []
 corrected_updates = []
 
 for update in updates:
-    if not is_valid_update_direct(update, ordering_rules):
+    if not is_valid(update, ordering_rules):
         incorrect_updates.append(update)
-        corrected_updates.append(correct_update_order(update, ordering_rules))
+        corrected_updates.append(correct(update, ordering_rules))
 
-middle_pages_corrected = [find_middle_page(update) for update in corrected_updates]
-result_corrected = sum(middle_pages_corrected)
+mid_correct = [find_mid(update) for update in corrected_updates]
+result2 = sum(mid_correct)
 
-print(result_corrected)
+print(result2)
